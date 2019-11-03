@@ -15,4 +15,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DAL\" />
+    <Folder Include="Model\" />
+    <Folder Include="RandomGenerators\" />
+  </ItemGroup>
+
 </Project>

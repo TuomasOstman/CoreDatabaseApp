@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace App.Entities.DB
+namespace CoreApp.Entities.DB
 {
     public partial class ThesisContext : DbContext
     {
@@ -18,6 +18,10 @@ namespace App.Entities.DB
         public virtual DbSet<TestTable> TestTable { get; set; }
 
         public virtual DbSet<RandomNumber> RandomNumber { get; set; }
+
+        public virtual DbSet<RandomObject> RandomObject { get; set; }
+
+        public virtual DbSet<Seed> Seed { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

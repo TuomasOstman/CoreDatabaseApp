@@ -1,37 +1,39 @@
-﻿using App.Entities.DB;
+﻿using CoreApp.Entities.DB;
 using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
-namespace App
+namespace CoreApp
 {
     class Program
     {
         private static readonly string ConnectionString = @"data source=OSTMYLLY\SQLEXPRESS;initial catalog=Thesis;integrated security=True";
 
+        private static readonly int Rows = 10000;
+        private static readonly int SeedId = 2;
+
         static void Main()
         {
-            // GLOBAL
-            var seed = 140894;
-            var rows = 10;
-            Console.WriteLine("Random seed is: " + seed + " and number of rows is: " + rows);
+            Console.WriteLine("SeedId is: " + SeedId + " and number of rows is: " + Rows);
 
-            // EF
-            var efsw = new Stopwatch();
+            // ADO.Net
 
-            Console.WriteLine("Entity Framework starts!\n");
+            var adosw = new Stopwatch();
+
+            Console.WriteLine("\n------------------------------------\n");
+            Console.WriteLine("ADO.Net starts!\n");
             Console.WriteLine("------------------------------------\n");
 
-            efsw.Start();
+            adosw.Start();
 
-            InsertDataEF(seed, rows);
-            GetDataEF();
-            DeleteDataEF();
+            ADONetDAL.InsertData(SeedId, Rows);
+            ADONetDAL.GetData();
+            ADONetDAL.DeleteData();
 
-            efsw.Stop();
+            adosw.Stop();
 
             // Dapper
 
@@ -43,32 +45,34 @@ namespace App
 
             dappersw.Start();
 
-            InsertDataDapper(seed, rows);
-            GetDataDapper();
-            DeleteDataDapper();
+            DapperDAL.InsertData(SeedId, Rows);
+            DapperDAL.GetData();
+            DapperDAL.DeleteData();
 
             dappersw.Stop();
 
-            // ADO.net
-
-            var adosw = new Stopwatch();
+            // EF
+            var efsw = new Stopwatch();
 
             Console.WriteLine("\n------------------------------------\n");
-            Console.WriteLine("ADO.Net starts!\n");
+            Console.WriteLine("Entity Framework starts!\n");
             Console.WriteLine("------------------------------------\n");
 
-            adosw.Start();
+            efsw.Start();
 
-            InsertDataADONet(seed, rows);
-            GetDataADONet();
-            DeleteDataADONet();
+            EntityFrameworkDAL.InsertData(SeedId, Rows);
+            EntityFrameworkDAL.GetData();
+            EntityFrameworkDAL.DeleteData();
 
-            adosw.Stop();
+            efsw.Stop();
 
             Console.WriteLine("------------------------------------\n");
             Console.WriteLine("Entity Framework time: " + efsw.Elapsed);
             Console.WriteLine("Dapper time:           " + dappersw.Elapsed);
             Console.WriteLine("ADO.Net time:          " + adosw.Elapsed);
+
+            Console.WriteLine("Press any key to close this window.");
+            Console.ReadKey();
         }
 
         #region EntityFramework

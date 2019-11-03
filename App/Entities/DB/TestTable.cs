@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace App.Entities.DB
+namespace CoreApp.Entities.DB
 {
     public partial class TestTable
     {

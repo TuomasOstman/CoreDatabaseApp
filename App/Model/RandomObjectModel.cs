@@ -12,6 +12,6 @@ namespace CoreApp.Model
 
         public int RandomInt;
 
-        public int RandomSeedId;
+        public int RandoSeedId;
     }
 }

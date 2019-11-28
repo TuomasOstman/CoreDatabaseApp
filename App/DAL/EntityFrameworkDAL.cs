@@ -35,6 +35,8 @@ namespace CoreApp
                             where sd.SeedID == seedID
                             select sd.SeedValue).FirstOrDefault();
 
+                    Console.WriteLine("--Seed is : " + seed);
+
                     var gen = new Random(seed);
 
                     while (i < rows)
@@ -97,13 +99,13 @@ namespace CoreApp
                                   RandomString = ro.RandomString,
                                   RandomDateTimeOffset = ro.RandomDateTimeOffset,
                                   RandomInt = ro.RandomInt,
-                                  RandomSeedId = ro.SeedID
+                                  RandoSeedId = ro.SeedID
                               }).FirstOrDefault();
                 }
 
                 sw.Stop();
 
-                Console.WriteLine("--Result was: " + result.RandomObjectID + ", " + result.RandomString + ", " + result.RandomDateTimeOffset + ", " + result.RandomInt + ", " + result.RandomSeedId);
+                Console.WriteLine("--Result was: " + result.RandomObjectID + ", " + result.RandomString + ", " + result.RandomDateTimeOffset + ", " + result.RandomInt + ", " + result.RandoSeedId);
                 Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
             }
             catch (Exception ex)
@@ -130,7 +132,7 @@ namespace CoreApp
 
                 using (var db = new ThesisContext())
                 {
-                    db.Database.ExecuteSqlInterpolated($"TRUNCATE TABLE RandomNumber");
+                    db.Database.ExecuteSqlInterpolated($"TRUNCATE TABLE RandomObject");
                 }
 
                 sw.Stop();

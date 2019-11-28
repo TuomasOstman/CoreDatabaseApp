@@ -33,21 +33,31 @@ namespace CoreApp
 
                 using (var conn = new SqlConnection(ConnectionString))
                 {
-                    seed = conn.Query<int>("SELECT SeedValue FROM Seed WHERE SeedID = @ID", new { ID = seedID }).FirstOrDefault();
+                    try
+                    {
+                        seed = conn.Query<int>("SELECT SeedValue FROM Seed WHERE SeedID = @ID", new { ID = seedID }).FirstOrDefault();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error when fetching Seed!");
+                        throw ex;
+                    }
+
+                    Console.WriteLine("--Seed is : " + seed);
 
                     var gen = new Random(seed);
 
                     while (i < rows)
                     {
-                        conn.Execute(@"INSERT INTO RandomObject([RandomObjectID], [RandomString], [RandomDateTimeOffset], [RandomInt], [RandomSeedId]) 
-                                                             Values(@RandomObjectID, @RandomString, @RandomDateTimeOffset, @RandomInt, @RandomSeedId)",
+                        conn.Execute(@"INSERT INTO RandomObject([RandomObjectID], [RandomString], [RandomDateTimeOffset], [RandomInt], [SeedId]) 
+                                                             Values(@RandomObjectID, @RandomString, @RandomDateTimeOffset, @RandomInt, @SeedId)",
                                                              new
                                                              {
                                                                  RandomObjectID = i,
                                                                  RandomString = RandomStringGenerator.RandomString(gen, 15),
                                                                  RandomDateTimeOffset = RandomDateTimeOffsetGenerator.RandomDateTimeOffset(gen),
                                                                  RandomInt = gen.Next(),
-                                                                 RandomSeedId = seedID
+                                                                 SeedId = seedID
                                                              });
 
                         i++;
@@ -87,14 +97,14 @@ namespace CoreApp
 
                 using (var conn = new SqlConnection(ConnectionString))
                 {
-                    result = conn.Query<RandomObjectModel>(@"SELECT TOP(1) RandomObjectID, RandomString, RandomDateTimeOffset, RandomInt, RandomSeedId
+                    result = conn.Query<RandomObjectModel>(@"SELECT TOP(1) RandomObjectID, RandomString, RandomDateTimeOffset, RandomInt, SeedId
                                                              FROM RandomObject
                                                              ORDER BY RandomDateTimeOffset DESC").FirstOrDefault();
                 }
 
                 sw.Stop();
 
-                Console.WriteLine("--Result was: " + result.RandomObjectID + ", " + result.RandomString + ", " + result.RandomDateTimeOffset + ", " + result.RandomInt + ", " + result.RandomSeedId);
+                Console.WriteLine("--Result was: " + result.RandomObjectID + ", " + result.RandomString + ", " + result.RandomDateTimeOffset + ", " + result.RandomInt + ", " + result.RandoSeedId);
                 Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
             }
             catch (Exception ex)
